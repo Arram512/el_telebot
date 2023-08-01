@@ -1,17 +1,9 @@
-import mysql.connector
+from .init_connector import mycursor
 
-mydb = mysql.connector.connect(
-  host="127.0.0.1",
-  user="root",
-  password="Night@Witches!#@",
-  database="el_telebot"
-)
+def get_admins_list():
+	mycursor.execute("SELECT telegram_id FROM users WHERE is_admin = 1")
 
-mycursor = mydb.cursor()
+	myresult = mycursor.fetchall()
 
-mycursor.execute("SELECT telegram_id FROM users WHERE is_admin = true")
-
-myresult = mycursor.fetchall()
-
-for x in myresult:
-  print(x)
+	for admins_tuple in myresult:
+		return admins_tuple

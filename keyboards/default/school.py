@@ -1,7 +1,7 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 
-lessons_db = ["Թեմա 1", "Թեմա 2", "Թեմա 3", "Թեմա 4", "Թեմա 5" ]
+lessons_db = ["Գրանցվել դասընթացին ", "Թեմա 1", "Թեմա 2", "Թեմա 3", "Թեմա 4", "Թեմա 5" ]
 keyboard = [[]]
 
 for lesson in lessons_db:
