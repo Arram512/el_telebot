@@ -9,5 +9,5 @@ for lesson in lessons_db:
 
 school = ReplyKeyboardMarkup(
     keyboard = keyboard,
-    resize_keyboard=True
+    resize_keyboard=False
 )
