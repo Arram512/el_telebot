@@ -34,5 +34,10 @@ async def disable_user(message: Message, state: FSMContext):
             user_id = data.get("user_id")
             return_status = await DBCommander.disable_user(int(user_id))
             await message.answer(text=f"Return status  {return_status}", reply_markup=ReplyKeyboardRemove())
-        await DisableUserGroup.DisableUser.set()
-        
+            await state.finish()
+        elif message.text == "Ոչ":
+            await message.answer(text=f"Օգտատիրոջ ակտիվացումը չեղարկվեց", reply_markup=ReplyKeyboardRemove())
+            await state.finish()
+
+        else:
+            await message.answer(text="Անթույլատրելի գործողություն")        
