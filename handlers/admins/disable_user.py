@@ -6,7 +6,6 @@ from aiogram.dispatcher.filters import Text
 from utils.db_api.models import DBCommander
 from keyboards.default import disable_user_markup
 from keyboards.inline import users_list_keyboard
-from time import sleep
 
 
 @dp.message_handler(Text("Ապաակտիվացնել օգտատիրոջը"), state=None)

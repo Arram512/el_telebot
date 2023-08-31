@@ -5,7 +5,7 @@ admin_actions = ReplyKeyboardMarkup(
         [
             KeyboardButton(text="Ակտիվացնել օգտատիրոջը"),
             KeyboardButton(text="Ապաակտիվացնել օգտատիրոջը"),
-            KeyboardButton(text="Հաստատել օգտագտիրոջ վճարումը"),
+            KeyboardButton(text="Հաստատել վճարումը"),
             KeyboardButton(text="Ուղարկել ծանուցում"),
         ]
     ], 
