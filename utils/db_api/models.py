@@ -5,7 +5,6 @@ from sqlalchemy import (Column, Integer, BigInteger, String,
                         Sequence, TIMESTAMP, Boolean, JSON)
 from sqlalchemy import sql
 from sqlalchemy import select
-import sys
 
 host="192.168.10.186"
 user="telebot"
@@ -42,6 +41,7 @@ class Content(db.Model):
     lesson_course = Column(String(100))
     lesson_name = Column(String(100))
     lesson_content = Column(String(100))
+    lesson_theme = Column(String(100))
     query: sql.Select
 
 
@@ -62,6 +62,13 @@ class DBCommands:
         non_admin_users = await User.select('student_id', 'full_name').where(User.is_admin == False).gino.all()
         return non_admin_users
     
+
+    async def check_user_activation_status(self, user_id):
+        status = await User.select('is_active').where(User.student_id == user_id).gino.scalar()
+        if status:
+            return True
+        return False
+
     async def disable_user(self, user_id:int):
         user = await User.update.values(is_active=False).where(User.student_id == user_id).gino.status()
         return user
@@ -73,6 +80,24 @@ class DBCommands:
     async def register_user(self, user_data):
         pass
 
+    async def get_course_themes(self, course):
+        content = await Content.select('lesson_theme').where(Content.lesson_course == course).gino.all()
+        return content
+    
+    async def get_theme_content(self, theme):
+        content = await Content.select('lesson_name', 'lesson_id').where(Content.lesson_theme == theme).gino.all()
+        return content
+    
+    async def get_lesson_content(self, lesson_id):
+        content = await Content.select('lesson_content').where(Content.lesson_id == lesson_id).gino.all()
+        return content
+    
+    async def check_user_access(self, user_id, course):
+        user_status = await User.select('active_courses').where(User.student_id == user_id).gino.status()
+        for user_course in user_status[1][0]:
+            if user_course == course:
+                return True
+        return False
 
 DBCommander = DBCommands()
 
