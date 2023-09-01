@@ -18,6 +18,7 @@ async def get_selected_module(message: Message, state: FSMContext):
         await GetCourseGroup.SelectTheme.set()
     else:
         await message.answer("Դուք գրանցված չեք դասընթացին, սեղմեք կոճակը գրանցվելու համար", reply_markup=subscribe_markup)
+        await SubscribeToCourse.GetUserData.set()
 
 
 

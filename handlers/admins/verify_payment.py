@@ -39,6 +39,7 @@ async def disable_user(message: Message, state: FSMContext):
             return_status = await DBCommander.verify_payment(int(user_id), current_datetime)
             if return_status:
                 await message.answer(text=f"Վճարումը հաստատված է", reply_markup=ReplyKeyboardRemove())
+                await dp.bot.send_message(user_id, "Ձեր վճարումը հաստատված է")
             await state.finish()
         elif message.text == "Ոչ":
             await message.answer(text=f"Օգտատիրոջ վճարման հաստատումը չեղարկվեց", reply_markup=ReplyKeyboardRemove())

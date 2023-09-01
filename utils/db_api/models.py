@@ -3,6 +3,8 @@ from gino import Gino
 from gino.schema import GinoSchemaVisitor
 from sqlalchemy import (Column, Integer, BigInteger, String,
                         Sequence, TIMESTAMP, Boolean, JSON)
+from sqlalchemy.dialects.postgresql import JSONB
+
 from sqlalchemy import sql
 from sqlalchemy import select
 
@@ -24,7 +26,7 @@ class User(db.Model):
     is_admin = Column(Boolean)
     is_active = Column(Boolean)
     current_lesson = Column(String(100))
-    active_courses = Column(JSON)
+    active_courses = Column(JSONB)
     payment_check_request = Column(Boolean)
     is_superadmin = Column(Boolean)
 
@@ -57,6 +59,15 @@ class DBCommands:
 
     async def check_if_admin(self, student_id):
         check =  await User.query.where((User.student_id == student_id) & (User.is_admin == True)).gino.first()
+        if check:
+            return check
+        
+        else:
+            return False
+        
+    
+    async def check_if_superadmin(self, student_id):
+        check =  await User.query.where((User.student_id == student_id) & (User.is_superadmin == True)).gino.first()
         if check:
             return check
         
@@ -127,7 +138,11 @@ class DBCommands:
             return False
         except IndexError:
             return False
-
+        
+    async def add_user_to_db(self, user_id, username, fullname, payment_request):
+        creation_status = await User.create(student_id = user_id, full_name = fullname, username=username, is_admin=False, is_active=False, active_courses="Հայտնություն", payment_check_request=payment_request, is_superadmin=False)
+        return creation_status
+    
 DBCommander = DBCommands()
 
 
