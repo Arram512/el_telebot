@@ -31,6 +31,7 @@ async def lesson_content(theme):
     for lesson in course_lessons:
         course_lessons_buttons.append(InlineKeyboardButton(text = lesson[0], callback_data=lesson[1]))
 
+    course_lessons_buttons.append(InlineKeyboardButton(text = "Ուղարկել տնային աշխատանքը🏡📝", callback_data='send_homework'))
     course_lessons_buttons.append(InlineKeyboardButton(text = "Վերադարձ", callback_data='back'))
     course_lessons_keyboard = InlineKeyboardMarkup(row_width=1)
     for button in course_lessons_buttons:

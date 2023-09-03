@@ -2,13 +2,13 @@ from aiogram import types, Bot
 from gino import Gino
 from gino.schema import GinoSchemaVisitor
 from sqlalchemy import (Column, Integer, BigInteger, String,
-                        Sequence, TIMESTAMP, Boolean, JSON)
+                        Sequence, TIMESTAMP, Boolean, JSON, Text)
 from sqlalchemy.dialects.postgresql import JSONB
 
 from sqlalchemy import sql
 from sqlalchemy import select
 
-host="127.0.0.1"
+host="192.168.10.186"
 user="telebot"
 password="Night@Witches!#@"
 database="telebot"
@@ -29,6 +29,8 @@ class User(db.Model):
     active_courses = Column(JSONB)
     payment_check_request = Column(Boolean)
     is_superadmin = Column(Boolean)
+    homework_check_request = Column(Boolean)
+    homework_content = Column(Text)
 
     query: sql.Select
 
@@ -77,23 +79,42 @@ class DBCommands:
     async def get_non_admin_users(self):
         non_admin_users = await User.select('student_id', 'full_name').where(User.is_admin == False).gino.all()
         return non_admin_users
+
+    async def get_user_data(self, user_id):
+        user_data = await User.select('username', 'full_name').where(User.student_id == user_id).gino.all()
+        return user_data
     
+    async def get_admin_users(self):
+        non_admin_users = await User.select('student_id').where(User.is_admin == True).gino.all()
+        return non_admin_users
+
     async def get_payment_check_requests(self):
         user = await User.select('student_id', 'full_name').where((User.payment_check_request == True) & (User.is_admin == False) & (User.is_superadmin == False)).gino.all()
         if user:
             return user
         return False
+    
+    async def get_homework_approve_requests(self):
+        homework = await User.select('student_id', 'full_name', 'homework_content').where((User.homework_check_request == True) & (User.is_admin == False) & (User.is_superadmin == False)).gino.all()
+        if homework:
+            return homework
+
+        return 
+        
+    async def get_homework_content(self, user_id):
+        homework = await User.select('homework_content').where(User.student_id == user_id).gino.all() 
+        return homework
 
     async def verify_payment(self, user_id, payment_date):
 
         activate_user = await User.update.values(
             is_active = True,
+            current_lesson = 'Աշակերտություն',
             last_payment_date = payment_date,
             payment_check_request=False
             ).where(User.student_id == user_id).gino.status()
         
         user = await User.select('full_name').where(User.student_id==int(user_id)).gino.first()
-        print(user, "11111111111111111111111111111111111111111111111111")
 
         if activate_user:
             return user
@@ -110,6 +131,22 @@ class DBCommands:
         user = await User.update.values(is_active=False).where(User.student_id == user_id).gino.status()
         return user
     
+    async def save_homework(self, user_id:int, homework_content:str):
+        save = await User.update.values(homework_check_request=True, homework_content=homework_content).where(User.student_id == user_id).gino.status()
+        return save
+    
+    async def get_user_current_theme(self, user_id):
+        current_lesson = await User.select('current_lesson').where(User.student_id == user_id).gino.first()
+        return current_lesson
+    
+    async def approve_homework(self, user_id:int, next_theme):
+        approve = await User.update.values(homework_check_request=False, homework_content="", current_lesson=next_theme).where(User.student_id == user_id).gino.status()
+        return approve
+
+    async def no_approve_homework(self, user_id:int):
+        approve = await User.update.values(homework_check_request=False, homework_content="").where(User.student_id == user_id).gino.status()
+        return approve
+    
     async def enable_user(self, user_id:int):
         user = await User.update.values(is_active=True).where(User.student_id == user_id).gino.status()
         return user
@@ -120,6 +157,16 @@ class DBCommands:
     async def get_course_themes(self, course):
         content = await Content.select('lesson_theme').where(Content.lesson_course == course).gino.all()
         return content
+
+    async def get_course_unique_themes(self, course="Հայտնություն"):
+        unique_themes = []
+        content = await Content.select('lesson_theme').where(Content.lesson_course == course).gino.all()
+        for theme in content:
+            if str(theme[0]) not in unique_themes:
+                unique_themes.append(str(theme[0]))
+
+        print(unique_themes)
+        return unique_themes
     
     async def get_theme_content(self, theme):
         content = await Content.select('lesson_name', 'lesson_id').where(Content.lesson_theme == theme).gino.all()
@@ -150,3 +197,7 @@ async def create_db():
     await db.set_bind(f'postgresql://{user}:{password}@{host}/{database}')
 
     db.gino: GinoSchemaVisitor
+
+
+
+
