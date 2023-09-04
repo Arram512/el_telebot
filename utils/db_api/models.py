@@ -31,7 +31,7 @@ class User(db.Model):
     is_superadmin = Column(Boolean)
     homework_check_request = Column(Boolean)
     homework_content = Column(Text)
-
+    payment_proof_path = Column(String(100))
     query: sql.Select
 
     def __repr__(self):
@@ -89,7 +89,7 @@ class DBCommands:
         return non_admin_users
 
     async def get_payment_check_requests(self):
-        user = await User.select('student_id', 'full_name').where((User.payment_check_request == True) & (User.is_admin == False) & (User.is_superadmin == False)).gino.all()
+        user = await User.select('student_id', 'full_name', 'payment_proof_path').where((User.payment_check_request == True) & (User.is_admin == False) & (User.is_superadmin == False)).gino.all()
         if user:
             return user
         return False
@@ -186,8 +186,8 @@ class DBCommands:
         except IndexError:
             return False
         
-    async def add_user_to_db(self, user_id, username, fullname, payment_request):
-        creation_status = await User.create(student_id = user_id, full_name = fullname, username=username, is_admin=False, is_active=False, active_courses="Հայտնություն", payment_check_request=payment_request, is_superadmin=False)
+    async def add_user_to_db(self, user_id, username, fullname, payment_request, payment_proof_path="none"):
+        creation_status = await User.create(student_id = user_id, full_name = fullname, username=username, is_admin=False, is_active=False, active_courses="Հայտնություն", payment_check_request=payment_request, is_superadmin=False, payment_proof_path = payment_proof_path)
         return creation_status
     
 DBCommander = DBCommands()

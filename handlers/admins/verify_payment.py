@@ -1,4 +1,4 @@
-from aiogram.types import Message, ReplyKeyboardRemove, CallbackQuery
+from aiogram.types import Message, ReplyKeyboardRemove, CallbackQuery, InputFile
 from loader import dp
 from states.verify_payment import VerifyPayment
 from aiogram.dispatcher import FSMContext
@@ -23,10 +23,21 @@ async def search_user(call:CallbackQuery, state: FSMContext):
     await call.answer(cache_time=60)
     search_result = await DBCommander.get_payment_check_requests()
     user_id = call.data
-    print(search_result)
-    if search_result:
+    if search_result and len(search_result) > 1:
+        for user in search_result:
+
+            await state.update_data(user_id=user_id)
+            with open(user[2], 'rb') as photo:
+                await dp.bot.send_photo(call.from_user.id, InputFile(photo))
+            await call.message.answer(text=f"Հաստատել օգտատիրոջ վճարումը?", reply_markup=disable_user_markup)
+    
+    elif len(search_result) == 1:
+        user = search_result[0]
         await state.update_data(user_id=user_id)
+        with open(user[2], 'rb') as photo:
+            await dp.bot.send_photo(call.from_user.id, InputFile(photo))
         await call.message.answer(text=f"Հաստատել օգտատիրոջ վճարումը?", reply_markup=disable_user_markup)
+
     await VerifyPayment.VerifyPayment.set()
 
 @dp.message_handler(state=VerifyPayment.VerifyPayment)
