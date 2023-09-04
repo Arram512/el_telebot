@@ -40,7 +40,8 @@ async def approve_homework(message: Message, state: FSMContext):
             current = await DBCommander.get_user_current_theme(user_id)
             current = current[0]
             current_index = all_themes.index(current)
-            if current_index != all_themes[-1]:
+            
+            if all_themes[current_index] != all_themes[-1]:
                 next_index = current_index + 1
 
                 return_status = await DBCommander.approve_homework(int(user_id),next_theme= all_themes[next_index])
@@ -49,6 +50,10 @@ async def approve_homework(message: Message, state: FSMContext):
                     await message.answer(text=f"Աշխատանքը հաստատված է։ Օգտատերը անցավ {all_themes[next_index]} թեմային", reply_markup=ReplyKeyboardRemove())
                     await dp.bot.send_message(user_id, f"✅Ձեր աշխատանքը հաստատված է, {all_themes[next_index]} թեման ակտիվացված է")
                 await state.finish()
+
+            else:
+                await message.answer(text=f"Աշխատանքը հաստատված է։ Օգտատերը ավարտեց դասընթացը", reply_markup=ReplyKeyboardRemove())
+                await dp.bot.send_message(user_id, f"✅Ձեր աշխատանքը հաստատված է, շնորհավորում ենք դասընթացը ավարտելու կապակցությամբ")
 
         else:
             await message.answer(text="Անթույլատրելի գործողություն")   

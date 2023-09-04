@@ -8,7 +8,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy import sql
 from sqlalchemy import select
 
-host="192.168.10.186"
+host="127.0.0.1"
 user="telebot"
 password="Night@Witches!#@"
 database="telebot"
@@ -151,9 +151,30 @@ class DBCommands:
         user = await User.update.values(is_active=True).where(User.student_id == user_id).gino.status()
         return user
     
+        
+    async def send_payment_request(self, user_id:int, payment_proof_path):
+        user = await User.update.values(payment_check_request=True, payment_proof_path=payment_proof_path).where(User.student_id == user_id).gino.status()
+        return user
+    
+    async def add_content(self, lesson_course, lesson_theme, lesson_name, lesson_content):
+        content = await Content.create(lesson_course=lesson_course, lesson_theme=lesson_theme, lesson_name=lesson_name, lesson_content=lesson_content)
+        return content
+
+
     async def register_user(self, user_data):
         pass
 
+    async def get_courses(self):
+        unique_courses = []
+        courses = await Content.select('lesson_course').gino.all()
+        for course in courses:
+            if str(course[0]) not in unique_courses:
+                   unique_courses.append(str(course[0]))
+        print(unique_courses)
+
+        return unique_courses
+
+    
     async def get_course_themes(self, course):
         content = await Content.select('lesson_theme').where(Content.lesson_course == course).gino.all()
         return content

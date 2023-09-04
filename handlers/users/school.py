@@ -25,6 +25,17 @@ async def get_selected_module(message: Message, state: FSMContext):
 
 
 
+@dp.message_handler(Text("Հայտնության դպրոց, կուրս 2"), state=None)
+async def get_selected_module(message: Message, state: FSMContext):
+    if await DBCommander.check_user_access(message.from_id, 'Հայտնություն2'):
+        await message.answer(f"Անցում հայտնության դպրոց", reply_markup=await course_themes("Հայտնություն2"))
+        
+        await GetCourseGroup.SelectTheme.set()
+    else:
+        await message.answer("Դուք գրանցված չեք դասընթացին, սեղմեք կոճակը գրանցվելու համար", reply_markup=subscribe_markup)
+        await SubscribeToCourse.GetUserData.set()
+
+
 @dp.callback_query_handler(state=GetCourseGroup.SelectTheme)
 async def get_theme_content(call:CallbackQuery, state: FSMContext):
     await call.answer(cache_time=60)

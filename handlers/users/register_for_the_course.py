@@ -52,7 +52,7 @@ async def handle_photo(message: Message, state: FSMContext):
     
     await message.photo[-1].download(photo_path)
     await DBCommander.add_user_to_db(user_id=user_id, username=username, fullname=fullname, payment_request=payment_request, payment_proof_path=str(photo_path))
-    await message.answer("Շնորհակալություն գրանցման համար։ Ձեր հայտը կհաստատվի ադմինիստրատորի կողմից դիտակրկվելուց հետո", reply_markup=menu_for_users)
+    await message.answer("Շնորհակալություն գրանցման համար։ Ձեր հայտը կհաստատվի ադմինիստրատորի կողմից դիտարկվելուց հետո", reply_markup=menu_for_users)
     await state.finish()
 
 

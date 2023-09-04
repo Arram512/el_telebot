@@ -5,3 +5,10 @@ class SubscribeToCourse(StatesGroup):
     PayOrLater = State()
     IfPaySendPhoto = State()
     End = State()
+
+
+class SendPayment(StatesGroup):
+    GetUserData = State()
+    PayOrLater = State()
+    IfPaySendPhoto = State()
+    End = State()

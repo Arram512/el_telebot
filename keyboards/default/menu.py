@@ -15,6 +15,7 @@ menu_for_users = ReplyKeyboardMarkup(
     keyboard=[
         [
             KeyboardButton(text="Հայտնության դպրոց"),
+            KeyboardButton(text="Հայտնության դպրոց, կուրս 2"),
             KeyboardButton(text="Սիրելի գործընկեր")
         ]
     ], 
