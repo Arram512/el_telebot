@@ -25,12 +25,9 @@ async def save_user_data(message: Message, state: FSMContext):
     await SubscribeToCourse.PayOrLater.set()
 
 @dp.message_handler(Text(choice_markup.cancel), state=SubscribeToCourse.PayOrLater)
-async def cancel(message: Message, state: FSMContext):
-
+async def cancel_payment(message: Message, state: FSMContext):
     await message.answer("Չեղարկված է")
     await state.finish()
-
-
 
 @dp.message_handler(Text(choice_markup.yes), state = SubscribeToCourse.PayOrLater)
 async def send_payment_check_request(message: Message, state: FSMContext):
@@ -38,7 +35,10 @@ async def send_payment_check_request(message: Message, state: FSMContext):
     await message.answer("Ուղարկեք փոխանցումը հավաստող կտրոնը")
     await SubscribeToCourse.IfPaySendPhoto.set()
 
-
+@dp.message_handler(Text(choice_markup.cancel), state=SubscribeToCourse.IfPaySendPhoto)
+async def cancel_payment(message: Message, state: FSMContext):
+    await message.answer("Չեղարկված է")
+    await state.finish()
 
 @dp.message_handler(content_types=ContentType.PHOTO, state = SubscribeToCourse.IfPaySendPhoto)
 async def handle_photo(message: Message, state: FSMContext):

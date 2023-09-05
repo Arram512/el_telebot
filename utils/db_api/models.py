@@ -8,7 +8,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy import sql
 from sqlalchemy import select
 
-host="127.0.0.1"
+host="192.168.10.186"
 user="telebot"
 password="Night@Witches!#@"
 database="telebot"

@@ -38,6 +38,11 @@ async def cancel(message: Message, state: FSMContext):
     await state.finish()
 
 
+@dp.message_handler(Text("Չեղարկել"), state = SendPayment.IfPaySendPhoto)
+async def cancel(message: Message, state: FSMContext):
+
+    await message.answer("Չեղարկված է")
+    await state.finish()
 
 
 @dp.message_handler(content_types=ContentType.PHOTO, state = SendPayment.IfPaySendPhoto)

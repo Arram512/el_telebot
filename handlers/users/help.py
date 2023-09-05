@@ -6,8 +6,11 @@ from loader import dp
 
 @dp.message_handler(CommandHelp())
 async def bot_help(message: types.Message):
-    text = ("Список команд: ",
-            "/start - Начать диалог",
-            "/help - Получить справку")
+    text = ("Հրամանների ցուցակ: ",
+            "/start - Ակտիվացնել դպրոցը",
+            "/help - Ստանալ հրամանների ցուցակը",
+            "/menu - Գլխավոր մենյու",
+            "/send payment - Ուղարկել վճարման հաստատման հայտ"
+            )
     
     await message.answer("\n".join(text))
