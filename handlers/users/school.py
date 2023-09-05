@@ -76,7 +76,7 @@ async def get_lesson_content(call:CallbackQuery, state: FSMContext):
     data = await state.get_data()
     lesson_theme = data.get("lesson_theme")
     
-    if await DBCommander.check_user_activation_status(int(call.from_user.id)) or lesson_theme == "Աշակերտություն" or int(call.data) == 11:
+    if await DBCommander.check_user_activation_status(int(call.from_user.id)) or lesson_theme == "Աշակերտություն" or int(call.data) == 5:
         lesson_id = call.data
         get_lesson_content = await DBCommander.get_lesson_content(int(lesson_id))
         print(get_lesson_content)

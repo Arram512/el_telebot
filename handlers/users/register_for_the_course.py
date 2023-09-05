@@ -24,16 +24,25 @@ async def save_user_data(message: Message, state: FSMContext):
     await message.answer(f"{username}\n{first_name}\n{last_name}\n\n Ուղարկել վճարման ստուգման հայտ?", reply_markup=choice_markup.disable_user_markup)
     await SubscribeToCourse.PayOrLater.set()
 
+@dp.message_handler(Text(choice_markup.cancel), state=SubscribeToCourse.PayOrLater)
+async def cancel(message: Message, state: FSMContext):
+
+    await message.answer("Չեղարկված է")
+    await state.finish()
+
+
+
 @dp.message_handler(Text(choice_markup.yes), state = SubscribeToCourse.PayOrLater)
 async def send_payment_check_request(message: Message, state: FSMContext):
 
     await message.answer("Ուղարկեք փոխանցումը հավաստող կտրոնը")
     await SubscribeToCourse.IfPaySendPhoto.set()
 
+
+
 @dp.message_handler(content_types=ContentType.PHOTO, state = SubscribeToCourse.IfPaySendPhoto)
 async def handle_photo(message: Message, state: FSMContext):
-    print("hitler_alert")
-    photo_folder = "C:\\Users\\User\\Desktop\\aiogram-bible"
+    photo_folder = "/home/telegram/el_telebot/checks"
     if not os.path.exists(photo_folder):
         os.makedirs(photo_folder)
     

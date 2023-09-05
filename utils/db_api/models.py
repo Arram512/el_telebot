@@ -224,7 +224,7 @@ class DBCommands:
             return False
         
     async def add_user_to_db(self, user_id, username, fullname, payment_request, payment_proof_path="none"):
-        creation_status = await User.create(student_id = user_id, full_name = fullname, username=username, is_admin=False, is_active=False, active_courses="Հայտնություն", payment_check_request=payment_request, is_superadmin=False, payment_proof_path = payment_proof_path)
+        creation_status = await User.create(student_id = user_id, full_name = fullname, username=username, is_admin=False, is_active=False, active_courses="Հայտնություն", current_lesson="Աշակերտություն", payment_check_request=payment_request, is_superadmin=False, payment_proof_path = payment_proof_path)
         return creation_status
     
 DBCommander = DBCommands()

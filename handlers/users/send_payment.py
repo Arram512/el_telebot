@@ -30,10 +30,19 @@ async def send_payment_check_request(message: Message, state: FSMContext):
     await message.answer("Ուղարկեք փոխանցումը հավաստող կտրոնը")
     await SendPayment.IfPaySendPhoto.set()
 
+
+@dp.message_handler(Text("Չեղարկել"), state = SendPayment.PayOrLater)
+async def cancel(message: Message, state: FSMContext):
+
+    await message.answer("Չեղարկված է")
+    await state.finish()
+
+
+
+
 @dp.message_handler(content_types=ContentType.PHOTO, state = SendPayment.IfPaySendPhoto)
 async def handle_photo(message: Message, state: FSMContext):
-    print("hitler_alert")
-    photo_folder = "/home/aram/Desktop/telebot_bak"
+    photo_folder = "/home/telegram/el_telebot/checks"
     if not os.path.exists(photo_folder):
         os.makedirs(photo_folder)
     
