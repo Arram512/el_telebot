@@ -50,9 +50,8 @@ async def get_theme_content(call:CallbackQuery, state: FSMContext):
         current_theme = current_theme[0]
 
         all_themes = await DBCommander.get_course_unique_themes()
-
+        
         if all_themes.index(str(lesson_theme)) <= all_themes.index(str(current_theme)):
-            print("hitler alert")
             print(str(current_theme))
             print(str(lesson_theme))
             await call.message.answer(text=f"Ընտրեք դասը", reply_markup=await lesson_content(lesson_theme))
@@ -77,7 +76,7 @@ async def get_lesson_content(call:CallbackQuery, state: FSMContext):
     data = await state.get_data()
     lesson_theme = data.get("lesson_theme")
     
-    if await DBCommander.check_user_activation_status(int(call.from_user.id)):
+    if await DBCommander.check_user_activation_status(int(call.from_user.id)) or lesson_theme == "Աշակերտություն" or int(call.data) == 11:
         lesson_id = call.data
         get_lesson_content = await DBCommander.get_lesson_content(int(lesson_id))
         print(get_lesson_content)
@@ -88,7 +87,7 @@ async def get_lesson_content(call:CallbackQuery, state: FSMContext):
         await call.message.answer(text=f"Ընտրեք դասը", reply_markup=await lesson_content(lesson_theme))
     
     else:
-        await call.message.answer(text=f"Դուք ապաակտիվացված եք, դրա համար չեք կարող դիտել դասը, մուծեք փողերը որ լավ ըլնի😄")
+        await call.message.answer(text=f"Դուք ապաակտիվացված եք, դրա համար չեք կարող դիտել դասը։ Դասընթացը ամբողջությամբ դիտելու համար կատարեք վճարում և ուղարկեք ստուգման հայտ\nԴպրոցի վճարը կազմում է ամսեկան 10․000 դրամ\nԱմբողջ դպրոցի կուրսը կազմում է 60000 դր․\nՎճարման հաշվեհամարները\nUNIBANK \n24100054017903 Հաշվեհամար\n4374690100306891 Քարտի համար\nVarazdat Bekzadyan\nTelcell ID 82675528 ,  Հեռ   +37499999610\nIdram ID 410275602 , Հեռ  +37499999610")
         await state.finish()
 
 

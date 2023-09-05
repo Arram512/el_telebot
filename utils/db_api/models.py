@@ -57,6 +57,10 @@ class DBCommands:
     async def get_user(self, student_id: int):
         user = await User.query.where((User.student_id==int(student_id)) & (User.is_admin == False)).gino.first()
         return user
+    
+    async def get_admin(self, student_id: int):
+        user = await User.query.where((User.student_id==int(student_id)) & (User.is_admin == True)).gino.first()
+        return user
 
 
     async def check_if_admin(self, student_id):
@@ -87,6 +91,11 @@ class DBCommands:
     async def get_admin_users(self):
         non_admin_users = await User.select('student_id').where(User.is_admin == True).gino.all()
         return non_admin_users
+    
+    async def get_admin_users_fork(self):
+        admin_users = await User.select('student_id', 'full_name').where(User.is_admin == True).gino.all()
+        return admin_users
+
 
     async def get_payment_check_requests(self):
         user = await User.select('student_id', 'full_name', 'payment_proof_path').where((User.payment_check_request == True) & (User.is_admin == False) & (User.is_superadmin == False)).gino.all()
@@ -150,7 +159,14 @@ class DBCommands:
     async def enable_user(self, user_id:int):
         user = await User.update.values(is_active=True).where(User.student_id == user_id).gino.status()
         return user
+
+    async def add_admin(self, user_id:int):
+        user = await User.update.values(is_admin=True, is_active=True).where(User.student_id == user_id).gino.status()
+        return user
     
+    async def remove_admin(self, user_id:int):
+        user = await User.update.values(is_admin=False).where(User.student_id == user_id).gino.status()
+        return user
         
     async def send_payment_request(self, user_id:int, payment_proof_path):
         user = await User.update.values(payment_check_request=True, payment_proof_path=payment_proof_path).where(User.student_id == user_id).gino.status()
@@ -176,21 +192,21 @@ class DBCommands:
 
     
     async def get_course_themes(self, course):
-        content = await Content.select('lesson_theme').where(Content.lesson_course == course).gino.all()
+        content = await Content.select('lesson_theme').where(Content.lesson_course == course).order_by(Content.lesson_id).gino.all()
         return content
 
     async def get_course_unique_themes(self, course="Հայտնություն"):
         unique_themes = []
-        content = await Content.select('lesson_theme').where(Content.lesson_course == course).gino.all()
+        # content = await Content.select('lesson_theme').where(Content.lesson_course == course).order_by(Content.lesson_id.asc())
+        content = await Content.select("lesson_theme").where(Content.lesson_course == course).order_by(Content.lesson_id).gino.all()
         for theme in content:
             if str(theme[0]) not in unique_themes:
                 unique_themes.append(str(theme[0]))
 
-        print(unique_themes)
         return unique_themes
     
     async def get_theme_content(self, theme):
-        content = await Content.select('lesson_name', 'lesson_id').where(Content.lesson_theme == theme).gino.all()
+        content = await Content.select('lesson_name', 'lesson_id').where(Content.lesson_theme == theme).order_by(Content.lesson_id).gino.all()
         return content
     
     async def get_lesson_content(self, lesson_id):

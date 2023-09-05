@@ -7,3 +7,5 @@ from . import notify_admins
 from . import notify_users
 from . import notify_all
 from . import add_content
+from . import add_administrator
+from . import remove_administrator

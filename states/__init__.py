@@ -6,3 +6,8 @@ from . import homework_approve
 from . import subscribe_to_course
 from . import admin_states
 from . import add_content
+from . import notify_admins
+from . import notify_users
+from . import notify_all
+from . import add_administrator
+from . import remove_administrator
