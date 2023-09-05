@@ -114,11 +114,11 @@ class DBCommands:
         homework = await User.select('homework_content').where(User.student_id == user_id).gino.all() 
         return homework
 
-    async def verify_payment(self, user_id, payment_date):
+    async def verify_payment(self, user_id, payment_date, current_lesson):
 
         activate_user = await User.update.values(
             is_active = True,
-            current_lesson = 'Աշակերտություն',
+            current_lesson = current_lesson,
             last_payment_date = payment_date,
             payment_check_request=False
             ).where(User.student_id == user_id).gino.status()
