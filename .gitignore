@@ -131,3 +131,6 @@ dmypy.json
 .env
 checks/
 *.save
+#custom
+checks/
+data/
