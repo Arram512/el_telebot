@@ -4,6 +4,7 @@ from keyboards.default import menu_for_users
 from keyboards.default import menu_for_admins
 from aiogram.dispatcher.filters import Command, Text
 from utils.db_api.models import DBCommander
+from utils.notify_admins import notify_admins
 from states.subscribe_to_course import SendPayment
 import keyboards.default.disable_user as choice_markup
 from aiogram.dispatcher import FSMContext
@@ -67,6 +68,7 @@ async def handle_photo(message: Message, state: FSMContext):
     await message.photo[-1].download(photo_path)
     await DBCommander.send_payment_request(user_id=user_id, payment_proof_path=str(photo_path))
     await message.answer("Շնորհակալություն վճարման համար։ Ձեր հայտը կհաստատվի ադմինիստրատորի կողմից դիտարկվելուց հետո", reply_markup=menu_for_users)
+    await notify_admins(dp=dp, user_data="" , action = "Նոր վճարման հաստատման հայտ")
     await state.finish()
 
 

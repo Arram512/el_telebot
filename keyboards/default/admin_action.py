@@ -22,6 +22,7 @@ superadmin_actions = ReplyKeyboardMarkup(
         [KeyboardButton(text="Ուղարկել ծանուցում օգտատերերին")],
         [KeyboardButton(text="Ավելացնել ադմինիստրատոր")],
         [KeyboardButton(text="Հեռացնել ադմինիստրատորին")],
+        [KeyboardButton(text="Տեսնել տնային աշխատանքը")],
         [KeyboardButton(text="Ավելացնել կոնտենտ")],
     ], 
     resize_keyboard=True  

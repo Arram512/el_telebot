@@ -51,7 +51,7 @@ async def get_theme_content(call:CallbackQuery, state: FSMContext):
 
         all_themes = await DBCommander.get_course_unique_themes()
         
-        if all_themes.index(str(lesson_theme)) <= all_themes.index(str(current_theme)):
+        if all_themes.index(str(lesson_theme)) <= all_themes.index(str(current_theme)) or DBCommander.check_if_admin(call.from_user.id) != False:
             print(str(current_theme))
             print(str(lesson_theme))
             await call.message.answer(text=f"Ընտրեք դասը", reply_markup=await lesson_content(lesson_theme))

@@ -9,7 +9,9 @@ async def users_list_keyboard():
     for user in users_list:
         users_list_keyboard_buttons.append(InlineKeyboardButton(text = user[1], callback_data=user[0]))
 
+    users_list_keyboard_buttons.append(InlineKeyboardButton(text = "Վերադարձ", callback_data='back'))
     users_list_keyboard = InlineKeyboardMarkup(row_width=1)
+
     for button in users_list_keyboard_buttons:
         users_list_keyboard.add(button)
 

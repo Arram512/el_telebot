@@ -10,7 +10,8 @@ async def bot_help(message: types.Message):
             "/start - Ակտիվացնել դպրոցը",
             "/help - Ստանալ հրամանների ցուցակը",
             "/menu - Գլխավոր մենյու",
-            "/send payment - Ուղարկել վճարման հաստատման հայտ"
+            "/send payment - Ուղարկել վճարման հաստատման հայտ",
+            "https://youtu.be/EPE_ltWvgk8?si=X6iXz54DDCylA6dh"
             )
     
     await message.answer("\n".join(text))
